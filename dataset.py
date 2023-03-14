@@ -13,7 +13,7 @@ random.seed(0)
 torch.manual_seed(0)
 np.random.seed(0)
 
-from torchvision import transforms
+from torchvision import datasets, models, transforms
 
 
 class MouthData(Dataset):
@@ -34,7 +34,7 @@ class MouthData(Dataset):
             for image_path in glob.glob(class_path  + "/*.png"):
                 self.data.append([image_path, class_name])
         
-        self.class_map = {"0": 0,
+        self.class_map = {"A": 0,
                           "1": 1,
                           "2": 2,
                           "3": 3,
@@ -58,7 +58,6 @@ class MouthData(Dataset):
         if self.transform:
             image_tensor = self.transform(image_tensor)
         
-        
         return image_tensor, class_id
 
   
@@ -69,8 +68,11 @@ class MouthData(Dataset):
 
 if __name__ == "__main__":
     
-    root = "/Users/amirpashamobinitehrani/Desktop/data"
-    dataset = MouthData(root)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--root', type=str, default='/Users/amirpashamobinitehrani/Desktop/data')
+    args = parser.parse_args()
+    
+    dataset = MouthData(args.root)
     dataloader = DataLoader(dataset,
                             batch_size = 1,
                             shuffle = True,
