@@ -1,12 +1,13 @@
 import math
+import argparse
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import init
 
 from torch.utils.data import DataLoader
-from utils import param_count #weight_scaling_init
-import argparse
+from utils import param_count
 
 class TheroNet(nn.Module):    
     def __init__(self,
