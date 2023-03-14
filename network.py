@@ -6,7 +6,7 @@ from torch.nn import init
 
 from torch.utils.data import DataLoader
 from utils import param_count #weight_scaling_init
-
+import argparse
 
 class TheroNet(nn.Module):
     
@@ -34,7 +34,7 @@ class TheroNet(nn.Module):
                 nn.MaxPool2d(kernel_size=2, stride=2)))
  
         self.fc_layers = nn.Sequential(
-            nn.Linear(4096, NF//2),
+            nn.Linear(NF * 4 * 4, NF//2),
             nn.ReLU(inplace = True),
             nn.Dropout(0.5),
             nn.Linear(NF//2, NC),
@@ -50,7 +50,6 @@ class TheroNet(nn.Module):
 
 
 if __name__ == '__main__':
-    
     net = TheroNet(NF=16,
                    NL = 5,
                    KS=3,
@@ -59,7 +58,6 @@ if __name__ == '__main__':
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu') 
     net.to(device)
     
-
     pixels = 128    #image shape of (128, 128)
     n_chans = 1     #gray scale image
     n_classes = 6
