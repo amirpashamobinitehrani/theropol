@@ -8,8 +8,7 @@ from torch.utils.data import DataLoader
 from utils import param_count #weight_scaling_init
 import argparse
 
-class TheroNet(nn.Module):
-    
+class TheroNet(nn.Module):    
     def __init__(self,
                  NF,
                  NL,
@@ -38,6 +37,7 @@ class TheroNet(nn.Module):
             nn.ReLU(inplace = True),
             nn.Dropout(0.5),
             nn.Linear(NF//2, NC),
+            nn.LogSoftmax(dim=1)
         )
 
 
@@ -50,10 +50,11 @@ class TheroNet(nn.Module):
 
 
 if __name__ == '__main__':
-    net = TheroNet(NF=16,
+    
+    net = TheroNet(NF = 16,
                    NL = 5,
-                   KS=3,
-                   stride=1)
+                   KS = 3,
+                   stride = 1)
     
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu') 
     net.to(device)
