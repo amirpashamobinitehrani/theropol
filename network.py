@@ -1,13 +1,14 @@
 import math
-import argparse
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 from torch.nn import init
 
-from torch.utils.data import DataLoader
-from utils import param_count
+
+from utils import param_count #weight_scaling_init
+import argparse
+import json
 
 class TheroNet(nn.Module):    
     def __init__(self,
@@ -51,30 +52,29 @@ class TheroNet(nn.Module):
 
 
 if __name__ == '__main__':
-    
-    net = TheroNet(NF = 16,
-                   NL = 5,
-                   KS = 3,
-                   stride = 1)
-    
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu') 
-    net.to(device)
-    
-    pixels = 128    #image shape of (128, 128)
-    n_chans = 1     #gray scale image
-    n_classes = 6
-    batch_size = 8
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--config', type=str, default='.config/theronet.json')
+    args = parser.parse_args()
+
+    with open(args.config) as f:
+        data = f.read()
+    config = json.loads(data)
+    network_config = config['network']
+
+    model = TheroNet(**network_config)
     
     #test input
-    x = torch.ones([batch_size, 
-                    n_chans, 
-                    pixels, 
-                    pixels])
+    x = torch.ones([8, 
+                    1, 
+                    128, 
+                    128])
     
     #forward propagations
-    y = net(x)
+    y = model(x)
     
-    print(net)
-    print(f"Number of TheröNet Parameters: {param_count(net)}")
-    assert y.shape == (batch_size, n_classes)
+    #logs
+    print(model)
+    print(f"Number of TheröNet Parameters: {param_count(model)}")
+    assert y.shape == (8, 6)
+    print(f"Network Intput Shape: {x.shape}")
     print(f"Network Output Shape: {y.shape}")
