@@ -9,43 +9,12 @@ import argparse
 import numpy as np
 
 from utils import normalized_to_pixel_coordinates, canny, is_blurry, sharpen, to_pixel_coords
+
+
 # image data path
 data_path = '/Users/amirpashamobinitehrani/Desktop/data/train'
 image_name = 'mouth'
 countdown = 3
-
-# Using cv2.imread() method
-# to read the image
-
-def normalized_to_pixel_coordinates(
-    normalized_x: float, normalized_y: float, image_width: int,
-    image_height: int) -> Union[None, Tuple[int, int]]:
-  """Converts normalized value pair to pixel coordinates."""
-
-  # Checks if the float value is between 0 and 1.
-  def is_valid_normalized_value(value: float) -> bool:
-    return (value > 0 or math.isclose(0, value)) and (value < 1 or
-                                                      math.isclose(1, value))
-
-  if not (is_valid_normalized_value(normalized_x) and
-          is_valid_normalized_value(normalized_y)):
-    # TODO: Draw coordinates even if it's outside of the image bounds.
-    return None
-  x_px = min(math.floor(normalized_x * image_width), image_width - 1)
-  y_px = min(math.floor(normalized_y * image_height), image_height - 1)
-  return x_px, y_px
-
-def canny(image, low_thresh=100, high_thresh=200):
-  edges = cv2.Canny(image, low_thresh, high_thresh)
-  return edges
-
-def is_blurry(image, thresh=150):
-  edges = cv2.Laplacian(image, cv2.CV_64F)
-  return edges.var() < thresh
-
-def sharpen(image, kernel):
-  sharp = cv2.filter2D(resized_down, -1, kernel)
-  return sharp
 
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
@@ -58,9 +27,6 @@ kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1, 0]])
 SCREEN_DIMENSIONS = (1920, 1080)
 count = 0
 
-
-def to_pixel_coords(relative_coords):
-    return tuple(round(coord * dimension) for coord, dimension in zip(relative_coords, SCREEN_DIMENSIONS))
 
 if __name__ == "__main__":
 
