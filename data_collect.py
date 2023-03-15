@@ -8,6 +8,7 @@ import time
 import argparse
 import numpy as np
 
+from utils import normalized_to_pixel_coordinates, canny, is_blurry, sharpen, to_pixel_coords
 # image data path
 data_path = '/Users/amirpashamobinitehrani/Desktop/data/train'
 image_name = 'mouth'
