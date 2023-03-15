@@ -1,0 +1,40 @@
+{
+    "network" : {
+        "NF" : 16,
+        "NL" : 5,
+        "KS": 3,
+        "stride": 1
+    },
+
+    "train" : {
+        "exp_path" : "TheroNet",
+        "log":{
+            "directory" : "/Users/amirpashamobinitehrani/Desktop/TheroPol/MouthNet/script/exp/",
+            "ckpt_iter" : "max",
+            "iters_per_ckpt" : 10000,
+            "iters_per_valid" : 10000,
+            "train_from_beginning" : 0
+        },
+
+        "optimization":{
+            "n_iters" : 25000,
+            "learning_rate" : 1e-4,
+            "batch_size" : 8,
+            "num_workers" : 4
+        },
+        
+        "loss":{
+            "algorithm": "cross_entropy"
+        }   
+    },
+    
+    "trainset" : {
+        "root_dir": "/Users/amirpashamobinitehrani/Desktop/data",
+        "subset" : "training"
+    },
+    
+    "gen" : {
+        "output_directory": "./exp"
+    
+    }
+}  
