@@ -16,14 +16,22 @@ def normalized_to_pixel_coordinates(
   y_px = min(math.floor(normalized_y * image_height), image_height - 1)
   return x_px, y_px
 
+
 def canny(image, low_thresh=100, high_thresh=200):
   edges = cv2.Canny(image, low_thresh, high_thresh)
   return edges
+
 
 def is_blurry(image, thresh=150):
   edges = cv2.Laplacian(image, cv2.CV_64F)
   return edges.var() < thresh
 
+
 def sharpen(image, kernel):
   sharp = cv2.filter2D(resized_down, -1, kernel)
   return sharp
+
+
+def to_pixel_coords(relative_coords):
+    return tuple(round(coord * dimension) for coord, dimension in zip(relative_coords, SCREEN_DIMENSIONS))
+
