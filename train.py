@@ -14,7 +14,6 @@ from dataset import MouthData
 from network import TheroNet
 from utils import param_count
 
-
 random.seed(0)
 torch.manual_seed(0)
 np.random.seed(0)
@@ -52,14 +51,13 @@ def train(exp_path,
     #get loss and optimizer
     if loss["algorithm"] == "cross_entropy":
         criterion = nn.CrossEntropyLoss()
-    
     optimizer = optim.SGD(net.parameters(), lr = optimization["learning_rate"] )
     loss = 0.0
     
     dataloader = torch.utils.data.DataLoader(dataset, 
                                              shuffle = True, 
-                                             batch_size = 8,
-                                             num_workers = 4)
+                                             batch_size = 16,
+                                             num_workers = 2)
     
     
     if log["train_from_beginning"] == 0:
@@ -68,11 +66,9 @@ def train(exp_path,
     n_iter = ckpt_iter + 1
     while n_iter < optimization["n_iters"] + 1:
 
-
         for images, labels in tqdm(dataloader, 0):
             
             optimizer.zero_grad()
-
             #forward and back-propagation
             outputs = net(images)
             loss = criterion(outputs, labels)
@@ -89,7 +85,7 @@ def train(exp_path,
                 tb.add_scalar("Train/Train-Loss", loss.item(), n_iter)
                 tb.add_scalar("Train/Gradient-Norm", grad_norm, n_iter)
             
-            #save checkpoints
+            #save checkpoints 
             if n_iter > 0 and n_iter % log["iters_per_ckpt"] == 0:
                 checkpoint_name = "{}_{}.pkl".format("TheroNet", n_iter)
                 torch.save({'iter': n_iter,
