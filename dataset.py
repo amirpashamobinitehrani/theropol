@@ -21,7 +21,7 @@ class MouthData(Dataset):
     def __init__(self,
                  root_dir,
                  subset = "training",
-                 transform=None):
+                 transform=True):
         
         self.root_dir = root_dir
         file_list = glob.glob(self.root_dir + "/*")
@@ -55,8 +55,8 @@ class MouthData(Dataset):
         class_id = self.class_map[class_name]        
         class_id = torch.tensor(class_id)
 
-        if self.transform:
-            image_tensor = self.transform(image_tensor)
+        if self.transform == True:
+            image_tensor = transforms.functional.rgb_to_grayscale(image_tensor, num_output_channels=1)
         
         return image_tensor, class_id
 
