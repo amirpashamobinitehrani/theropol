@@ -34,7 +34,7 @@ class MouthData(Dataset):
             for image_path in glob.glob(class_path  + "/*.png"):
                 self.data.append([image_path, class_name])
         
-        self.class_map = {"A": 0,
+        self.class_map = {"0": 0,
                           "1": 1,
                           "2": 2,
                           "3": 3,
@@ -53,7 +53,7 @@ class MouthData(Dataset):
         
         #get class ids and convert to one hot vectors
         class_id = self.class_map[class_name]        
-        class_id = F.one_hot(torch.tensor([class_id]), num_classes = 6)
+        class_id = torch.tensor(class_id)
 
         if self.transform:
             image_tensor = self.transform(image_tensor)
@@ -82,10 +82,6 @@ if __name__ == "__main__":
         
         print(f"Batch of images has shape: {image.shape}" )
         print(f"Batch of labels has shape: {label.shape}")
-
-        #print a single data and label tensor
-        print(image)
-        print(label)
         
         break
 
