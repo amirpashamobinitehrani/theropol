@@ -36,5 +36,9 @@
     "gen" : {
         "output_directory": "./exp"
     
+    },
+    
+    "inference" : {
+        "threshold" : 0.80,
     }
 }  
