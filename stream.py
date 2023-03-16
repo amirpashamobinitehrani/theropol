@@ -11,8 +11,14 @@ import json
 import torch
 from network import TheroNet
 
+from pythonosc import udp_client
+from pythonosc.udp_client import SimpleUDPClient
+from utils import UDP, Vowel
+
 
 #camera and screen confgis
+ip = "127.0.0.1"
+oscSender1 = udp_client.UDPClient(ip, 1111)
 countdown = 3
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_EXPOSURE, -8.0)
@@ -138,28 +144,15 @@ if __name__ == "__main__":
           gray_scale_tensor = gray_scale_tensor.type(torch.FloatTensor).unsqueeze(0)
           
           with torch.no_grad():
-            y = model(gray_scale_tensor)
-            y = y.squeeze(0)
             
-            if abs(y[0]) < 0.5:
-              print('C')
+            y = model(gray_scale_tensor).squeeze(0)
             
-            elif abs(y[1]) < 0.9:
-              print('A')
-
-            elif abs(y[2]) < 0.9:
-              print('O')
-
-            elif abs(y[3]) < 0.8:
-              print('I')
-
-            elif abs(y[4]) < 0.7:
-              print('E')
-            
-            elif (abs(y[5])) < 1.5:
-              print('U')
-
-
+            #map vowel
+            vowel = Vowel.map(y)
+          
+          
+          #send data to max
+          UDP(vowel, oscSender1).send()
       # Flip the image horizontally for a selfie-view display.
       cv2.imshow('MediaPipe Face Detection', cv2.flip(image, 1))
       
